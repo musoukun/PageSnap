@@ -1,4 +1,4 @@
-# PDF to Image Converter - Webアプリケーション
+# PageSnap (PDF to Image Converter) - Webアプリケーション
 
 ## 概要
 PDFファイルを高品質な画像（PNG/JPEG）に変換するWebアプリケーションです。
@@ -178,5 +178,4 @@ ls -la ./web/uploads/
 - **ファイル管理**: Archiver (ZIP作成)
 
 ---
-
-🎯 **高品質なPDF変換をお楽しみください！**
+pdf2img
