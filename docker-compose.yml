@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+    web:
+        build: ./web
+        container_name: pdf2img-web
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./web:/app
+            - ./web/uploads:/app/uploads
+            - /app/node_modules
+        environment:
+            - NODE_ENV=development
+            - PDF_RETENTION_DAYS=2
+            - ENABLE_CLEANUP=true
