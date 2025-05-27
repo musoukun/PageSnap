@@ -141,11 +141,6 @@ export class PDFConverter {
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
 
-			// 進捗コールバック
-			if (onProgress) {
-				onProgress(i + 1, files.length, file.name);
-			}
-
 			console.log(`変換開始: ${file.name} (${i + 1}/${files.length})`);
 
 			const result = await this.convertPDF(file.path, outputDir, options);
@@ -158,6 +153,11 @@ export class PDFConverter {
 				);
 			} else {
 				console.error(`変換失敗: ${file.name} - ${result.error}`);
+			}
+
+			// 進捗コールバック（変換完了後に呼び出し）
+			if (onProgress) {
+				onProgress(i + 1, files.length, file.name);
 			}
 		}
 

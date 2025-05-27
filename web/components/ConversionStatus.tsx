@@ -15,7 +15,7 @@ interface ConversionStatusProps {
 
 interface JobStatus {
 	id: string;
-	status: "uploaded" | "processing" | "completed" | "error";
+	status: "uploaded" | "processing" | "zipping" | "completed" | "error";
 	progress: number;
 	files: Array<{ name: string; size: number }>;
 	createdAt: string;
@@ -112,7 +112,10 @@ export function ConversionStatus({ conversionId }: ConversionStatusProps) {
 		fetchStatus();
 
 		const interval = setInterval(() => {
-			if (jobStatus?.status === "processing") {
+			if (
+				jobStatus?.status === "processing" ||
+				jobStatus?.status === "zipping"
+			) {
 				fetchStatus();
 			}
 		}, 2000);
@@ -134,6 +137,13 @@ export function ConversionStatus({ conversionId }: ConversionStatusProps) {
 					<Badge variant="default">
 						<Play className="w-3 h-3 mr-1" />
 						処理中
+					</Badge>
+				);
+			case "zipping":
+				return (
+					<Badge variant="default" className="bg-blue-500">
+						<Download className="w-3 h-3 mr-1" />
+						ZIP作成中
 					</Badge>
 				);
 			case "completed":
@@ -301,6 +311,25 @@ export function ConversionStatus({ conversionId }: ConversionStatusProps) {
 						<p className="text-sm text-muted-foreground">
 							変換形式: {jobStatus.format?.toUpperCase() || "PNG"}
 						</p>
+					</CardContent>
+				</Card>
+			)}
+
+			{/* ZIP作成中表示 */}
+			{jobStatus.status === "zipping" && (
+				<Card>
+					<CardHeader>
+						<CardTitle className="text-blue-600">
+							ZIPファイル作成中
+						</CardTitle>
+					</CardHeader>
+					<CardContent className="space-y-4">
+						<p className="text-sm text-muted-foreground">
+							変換された画像をZIPファイルにまとめています...
+						</p>
+						<div className="flex items-center justify-center py-4">
+							<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+						</div>
 					</CardContent>
 				</Card>
 			)}

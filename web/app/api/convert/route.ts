@@ -111,9 +111,9 @@ async function processConversion(
 				quality: format === "jpeg" ? 90 : undefined,
 			},
 			(current, total, fileName) => {
-				// 進捗更新
-				const progress = Math.round((current / total) * 100);
-				jobInfo.progress = progress;
+				// 進捗更新（ファイル変換完了時に更新）
+				const conversionProgress = Math.round((current / total) * 100);
+				jobInfo.progress = conversionProgress;
 
 				// 非同期でジョブ情報を更新（エラーは無視）
 				writeFile(jobInfoPath, JSON.stringify(jobInfo, null, 2)).catch(
@@ -121,7 +121,7 @@ async function processConversion(
 				);
 
 				console.log(
-					`進捗: ${current}/${total} - ${fileName} (${progress}%)`
+					`進捗: ${current}/${total} - ${fileName} (${conversionProgress}%)`
 				);
 			}
 		);
@@ -137,6 +137,11 @@ async function processConversion(
 				console.error(`✗ ${result.file}: ${result.result.error}`);
 			}
 		});
+
+		// ZIP圧縮開始を通知
+		jobInfo.status = "zipping";
+		await writeFile(jobInfoPath, JSON.stringify(jobInfo, null, 2));
+		console.log("ZIPファイル作成開始...");
 
 		// ZIP圧縮
 		const zipPath = path.join(uploadDir, "converted_images.zip");
